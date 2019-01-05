@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 import { addTag, removeTag } from '../actions'
 
 const InputComponent = props => {
-  const { tags, tagsSuggestions, onDeleteTag, onAddTag } = props
+  const { tags, ingredientsSuggestion, onDeleteTag, onAddTag } = props
   return (
     <ReactTags
       tags={tags}
-      suggestions={tagsSuggestions}
+      suggestions={ingredientsSuggestion}
       handleDelete={onDeleteTag}
       handleAddition={onAddTag}
       placeholder='Shkruaj nje ingrendient te ri'
@@ -17,10 +17,10 @@ const InputComponent = props => {
 }
 
 const mapStateToProps = state => {
-  console.log('we need that state, and the state is  ', state)
+  console.log('we need that state, and the state is  ', state.InputReducer)
   return {
     tags: state.InputReducer.tags,
-    tagsSuggestions: state.InputReducer.tagsSuggestions
+    ingredientsSuggestion: state.InputReducer.ingredientsSuggestion
   }
 }
 

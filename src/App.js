@@ -2,19 +2,16 @@ import React from 'react'
 import InputComponent from './components/Input'
 import { connect } from 'react-redux'
 import Recipe from './components/Recipe'
-import { fetchRecipes, fetchIngredients } from './actions'
+import { fetchIngredients } from './actions'
 import store from './store'
 
 class App extends React.Component {
   handleSubmit = e => {
     e.preventDefault()
-    this.props.onSubmit()
-    console.log('submit')
   }
 
   componentDidMount = () => {
-    this.props.onSubmit()
-    console.log(store.getState())
+    this.props.fetchIngredients()
   }
 
   renderRecipe = recipe => (
@@ -79,6 +76,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onSubmit: () => {
+      // dispatch(fetchIngredients())
+    },
+    fetchIngredients: () => {
       dispatch(fetchIngredients())
     }
   }

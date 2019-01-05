@@ -6,6 +6,8 @@ import {
   FETCH_INGREDIENTS_FAILURE
 } from './types'
 
+import axios from 'axios'
+
 export const addTag = tag => ({
   type: ADD_TAG,
   payload: tag
@@ -16,16 +18,24 @@ export const removeTag = tag => ({
   payload: tag
 })
 
-export const fetchProductsBegin = () => ({
-  type: FETCH_PRODUCTS_BEGIN
-});
+export const fetchIngredients = () => {
+	console.log('this ran')
+  return dispatch => axios.get('http://localhost:5000/ingredients')
+    .then(({ data }) => {
+      dispatch(fetchIngredientsSuccess(data))
+      console.log('we got the data')
+    })
+    .catch(err => {
+    	dispatch(fetchIngredientsFailure(err))
+    })
+}
 
 export const fetchIngredientsSuccess = ingredients => ({
-  type: FETCH_INGREDIENTS_,
+  type: FETCH_INGREDIENTS_SUCCESS,
   payload: { ingredients }
-});
+})
 
 export const fetchIngredientsFailure = error => ({
-  type: FETCH_PRODUCTS_FAILURE,
+  type: FETCH_INGREDIENTS_FAILURE,
   payload: { error }
-});
+})

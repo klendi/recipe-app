@@ -1,8 +1,21 @@
-import { ADD_TAG, REMOVE_TAG, FETCH_INGREDIENTS } from '../actions/types'
+import {
+  ADD_TAG,
+  REMOVE_TAG,
+  FETCH_INGREDIENTS_SUCCESS,
+  FETCH_INGREDIENTS_FAILURE
+} from '../actions/types'
+
 import { tagsInitialState } from '../store/initialState'
 import axios from 'axios'
 
-const InputReducer = (state = { tags: [], tagsSuggestions: [] }, action) => {
+const initialState = {
+  tags: [],
+  ingredientsSuggestion: [],
+  loading: false,
+  error: null
+}
+
+const InputReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TAG:
       const _tags = [].concat(state.tags, action.payload)
@@ -13,14 +26,15 @@ const InputReducer = (state = { tags: [], tagsSuggestions: [] }, action) => {
       tags.splice(action.payload, 1)
       return { ...state, tags }
 
-    case FETCH_INGREDIENTS:
-      axios.get('http://localhost:5000/ingredients')
-        .then(({ data }) => {
-          console.log('fetched them all')
-          console.log('raw data', data)
-          console.log({...state, tagsSuggestions: data})
-          return { ...state, tagsSuggestions: data }
-        })
+    case FETCH_INGREDIENTS_SUCCESS:
+      console.log('success, the data is ', action.payload.ingredients)
+      return {...state, ingredientsSuggestion: action.payload.ingredients}
+      break
+
+    case FETCH_INGREDIENTS_FAILURE:
+      console.log('error, the error is ', action.payload)
+      return {...state, error: action.payload}
+      break
 
     default:
       return state

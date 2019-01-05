@@ -17,6 +17,7 @@ const InputComponent = props => {
 }
 
 const mapStateToProps = state => {
+  console.log('we need that state, and the state is  ', state)
   return {
     tags: state.InputReducer.tags,
     tagsSuggestions: state.InputReducer.tagsSuggestions

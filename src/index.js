@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import './dist/style.css'
 import 'react-tag-autocomplete/example/styles.css'
 
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

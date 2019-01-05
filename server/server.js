@@ -1,33 +1,20 @@
 import express from 'express'
-import { ApolloServer } from 'apollo-server-express'
 import mongoose from 'mongoose'
-import typeDefs from './graphql/schema'
-import resolvers from './graphql/resolvers'
+import bodyParser from 'body-parser'
 import cors from 'cors'
 import chalk from 'chalk'
 import db from './db'
+import { initRouter } from './routes/router'
+const dontenv = require('dotenv').config()
 
 const app = express()
-const PORT = 8000
 
-require('./models/User')
-require('./models/Ingredient')
-const User = mongoose.model('User')
-const Ingredient = mongoose.model('Ingredient')
+const PORT = 5000
+app.use(bodyParser.json({ type: '*/*' }))
 
 db.init()
-
-app.use(cors('*'))
-
-const server = new ApolloServer({ typeDefs, resolvers, context: { User, Ingredient } })
-server.applyMiddleware({ app })
+initRouter(app)
 
 app.listen(PORT, () => {
-  console.log(
-    chalk.bgGreen(
-      chalk.white(
-        `Server ready at http://localhost:${PORT}${server.graphqlPath}`
-      )
-    )
-  )
+  console.log(chalk.green(`Server ready at http://localhost:${PORT}`))
 })

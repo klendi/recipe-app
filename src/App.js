@@ -2,12 +2,12 @@ import React from 'react'
 import InputComponent from './components/Input'
 import { connect } from 'react-redux'
 import Recipe from './components/Recipe'
-import { fetchIngredients } from './actions'
-import store from './store'
+import { fetchIngredients, fetchRecipe } from './actions'
 
 class App extends React.Component {
   handleSubmit = e => {
     e.preventDefault()
+    this.props.onSubmit(this.props.tags)
   }
 
   componentDidMount = () => {
@@ -31,6 +31,13 @@ class App extends React.Component {
     </div>
   )
 
+  renderRecipeList = results => {
+    if (!results || results.length === 0)
+      return null
+
+    return results.map(recipe => <Recipe recipe={recipe} />)
+  }
+
   render() {
     const { results } = this.props
     return (
@@ -38,10 +45,11 @@ class App extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <br />
           <br />
-          <h1 className='primary-header u-text-center'>Qofte ke daja</h1>
+          <h1 className='primary-header u-text-center'>Recipe App</h1>
           <br />
           <InputComponent />
-          <br />
+          <br/>
+          <br/>
           <div className='u-text-center'>
             <button
               type='submit'
@@ -55,9 +63,7 @@ class App extends React.Component {
           <br />
           <br />
           <div className='row'>
-            {results.length === 0 ? (results.map(recipe => (
-              <Recipe recipe={recipe} />
-            ))) : null}
+            {this.renderRecipeList(results)}
           </div>
         </form>
       </div>
@@ -69,14 +75,14 @@ const mapStateToProps = state => {
   return {
     tags: state.InputReducer.tags,
     tagsSuggestions: state.InputReducer.tagsSuggestions,
-    results: state.recipesReducer
+    results: state.recipesReducer.recipes
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSubmit: () => {
-      // dispatch(fetchIngredients())
+    onSubmit: ingredients => {
+      dispatch(fetchRecipe({ ingredients }))
     },
     fetchIngredients: () => {
       dispatch(fetchIngredients())

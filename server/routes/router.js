@@ -25,12 +25,18 @@ export const initRouter = app => {
     res.send({ message: 'you made it' })
   })
 
+  // Ingredients
   app.get('/ingredients', async (req, res) => {
-    Ingredient.find({}, (err, ingredients) => {
-      if (err) return res.status(500).send({ error: err })
+    const amount = Number(req.query.amount) || 10
+    const sort = req.body.sort || { date: -1 }
 
-      res.status(200).send(ingredients)
-    })
+    Ingredient.find()
+      .sort(sort)
+      .limit(amount)
+      .exec((err, ingredients) => {
+        if (err) return res.status(500).send({ error: err })
+        res.status(200).send({ ingredients })
+      })
   })
 
   app.get('/ingredient/:id', async (req, res) => {
@@ -47,15 +53,22 @@ export const initRouter = app => {
     })
   })
 
-  app.get('/recipes', async (req, res) => {
-    Recipe.find({}, (err, recipes) => {
-      if (err) return res.status(500).send({ error: err })
+  // Recipes
 
-      res.status(200).send({recipes})
-    })
+  app.get('/recipes', async (req, res) => {
+    const amount = Number(req.query.amount) || 10
+    const sort = req.body.sort || { date: -1 }
+
+    Recipe.find()
+      .sort(sort)
+      .limit(amount)
+      .exec((err, recipes) => {
+        if (err) return res.status(500).send({ error: err })
+        res.status(200).send({ recipes })
+      })
   })
 
-  app.get('/recipe/:id', async (req, res) => {
+  app.get('/recipe/:id', async (req, res) => { 
     Recipe.findById(req.params.name, (err, recipe) => {
       if (err) {
         res.status(500).send({ error: err })
@@ -69,6 +82,7 @@ export const initRouter = app => {
     })
   })
 
+  // Create Section
   app.post('/create/ingredient/', async (req, res) => {
 
     Ingredient.findOne({ name: req.body.name }, (err, existingIngredient) => {
@@ -92,26 +106,6 @@ export const initRouter = app => {
           message: 'You have sucessfully created the ingredient'
         })
       })
-    })
-  })
-
-  app.delete('/delete/ingredient/:id', async (req, res) => {
-    Ingredient.findByIdAndRemove(req.params.id, (err, ingredient) => {
-      if (err) {
-        return res.status(500).send({ error: err })
-      }
-
-      return res.status(200).send({ sucess: true, name: ingredient.name })
-    })
-  })
-
-  app.delete('/delete/recipe/:id', async (req, res) => {
-    Recipe.findByIdAndRemove(req.params.id, (err, recipe) => {
-      if (err) {
-        return res.status(500).send({ error: err })
-      }
-
-      return res.status(200).send({ sucess: true, name: recipe.name })
     })
   })
 
@@ -150,12 +144,48 @@ export const initRouter = app => {
     })
   })
 
-  app.get('/search', (req, res) => {
-    const { ingredients } = req.body
+  // Delete Section
 
-    Recipe.find({ ingredients: { "$in": ingredients } }, (err, recipes) => {
-      res.status(200).send({ recipes: recipes })
+  app.delete('/delete/ingredient/:id', async (req, res) => {
+    Ingredient.findByIdAndRemove(req.params.id, (err, ingredient) => {
+      if (err) {
+        return res.status(500).send({ error: err })
+      }
+
+      return res.status(200).send({ sucess: true, name: ingredient.name })
     })
+  })
+
+  app.delete('/delete/recipe/:id', async (req, res) => {
+    Recipe.findByIdAndRemove(req.params.id, (err, recipe) => {
+      if (err) {
+        return res.status(500).send({ error: err })
+      }
+
+      return res.status(200).send({ sucess: true, name: recipe.name })
+    })
+  })
+
+  // Search
+  app.post('/search', (req, res) => {
+    const { ingredients } = req.body
+    
+    if(!ingredients) {
+      console.error('ingredients not found')
+      return
+    }
+    const amount = Number(req.query.amount) || 10
+    const sort = req.body.sort || { date: -1 }
+
+    Recipe.find({ ingredients: { "$in": ingredients } })
+      .sort(sort)
+      .limit(amount)
+      .exec((err, recipes) => {
+        if (err) {
+          return res.status(500).send({ error: err })
+        }
+        res.status(200).send({ recipes })
+      })
   })
 
 }

@@ -5,8 +5,7 @@ import * as serviceWorker from './serviceWorker'
 import store from './store'
 import { Provider } from 'react-redux'
 import './dist/style.css'
-import 'react-tag-autocomplete/example/styles.css'
-
+// import 'react-tag-autocomplete/example/styles.css'
 
 ReactDOM.render(
   <Provider store={store}>

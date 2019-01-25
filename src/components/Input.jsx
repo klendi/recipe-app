@@ -11,13 +11,12 @@ const InputComponent = props => {
       suggestions={ingredientsSuggestion}
       handleDelete={onDeleteTag}
       handleAddition={onAddTag}
-      placeholder='Shkruaj nje ingrendient te ri'
+      placeholder='Shkruaj nje ingrendient         '
     />
   )
 }
 
 const mapStateToProps = state => {
-  console.log('we need that state, and the state is  ', state.InputReducer)
   return {
     tags: state.InputReducer.tags,
     ingredientsSuggestion: state.InputReducer.ingredientsSuggestion

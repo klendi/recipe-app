@@ -1,18 +1,17 @@
-import { FETCH_RECIPES_SUCCESS } from '../actions/types'
-import { recipesInitalState } from '../store/initialState'
-import axios from 'axios'
-const endpoint = 'http://localhost:5000'
+import { FETCH_RECIPE_SUCCESS, FETCH_RECIPE_FAILURE } from '../actions/types'
 
 const initialState = {
-  
+  recipes: []
 }
 
 const RecipesReducer = (state = initialState, action) => {
 
   switch (action.type) {
-    case FETCH_RECIPES_SUCCESS:
-      console.log('success, we got the data', action.payload.ingredients)
-      return state
+    case FETCH_RECIPE_SUCCESS:
+      return {...state, recipes: action.payload }
+
+    case FETCH_RECIPE_FAILURE:
+      return { ...state, error: action.payload }
 
     default:
       return state
